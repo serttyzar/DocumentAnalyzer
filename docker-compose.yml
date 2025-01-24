@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .  
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploaded_images:/app/uploaded_images
+      - ./models:/app/models
+    environment:
+      - PYTHONUNBUFFERED=1
