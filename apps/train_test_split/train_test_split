@@ -1,0 +1,36 @@
+import os
+import random
+from pathlib import Path
+
+def split_dataset(input_dir, train_list_file, test_list_file, test_split_ratio=0.2, seed=42):
+    # Установка случайного seed для воспроизводимости
+    random.seed(seed)
+
+    # Сбор всех файлов JSON
+    json_files = sorted(Path(input_dir).rglob("*.json"))
+
+    # Перемешивание и разделение
+    random.shuffle(json_files)
+    split_idx = int(len(json_files) * (1 - test_split_ratio))
+    train_files = json_files[:split_idx]
+    test_files = json_files[split_idx:]
+
+    # Сохранение списков в файлы
+    with open(train_list_file, "w") as f:
+        for file in train_files:
+            f.write(f"{file}\n")
+
+    with open(test_list_file, "w") as f:
+        for file in test_files:
+            f.write(f"{file}\n")
+
+    print(f"Разделение завершено!")
+    print(f"Train: {len(train_files)} файлов, Test: {len(test_files)} файлов.")
+
+# Параметры
+input_dir = "json/"  # Папка с JSON-файлами
+train_list_file = "train_files.txt"  # Список файлов для train
+test_list_file = "test_files.txt"  # Список файлов для test
+test_split_ratio = 0.2  # Доля тестовой выборки
+
+split_dataset(input_dir, train_list_file, test_list_file, test_split_ratio)
